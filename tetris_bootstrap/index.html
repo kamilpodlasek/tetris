@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=utf-8 />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="style.css">
+	<script src="script.js"></script>
+</head>
+<body>
+	<div class="container-fluid">
+		
+		<div class="row">
+			<div class="col-lg-3 col-xs-12 center-block" id="startGameScreen">
+				<h1>TETRIS</h1>
+				<h2><img src="images/keyArrowL.png" alt="arrow left" height="50" width="50"> - move left</h2>
+				<h2><img src="images/keyArrowR.png" alt="arrow right" height="50" width="50"> - move right</h2>
+				<h2><img src="images/keyArrowD.png" alt="arrow down" height="50" width="50"> - move down</h2>
+				<h2><img src="images/keySpace.png" alt="key space" height="50" width="137"> - rotate</h2>
+				<h2><img src="images/keyP.png" alt="key p" height="50" width="50"> - pause</h2>
+				<div id="start"></div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-lg-6 col-xs-12 center-block" id="gameScreen">
+				<div class="row">
+					<div class="col-lg-10 col-xs-10">
+						<section class="field"></section>
+					</div>
+					<div class="col-lg-2 col-xs-2">
+						<h2>Points:</h2>
+						<h3>0</h3>
+						<h4>Next figure:</h4>
+						<section class="nextFigure"></section>
+					</div>
+				</div>
+				
+				<!--
+				<div class="row">
+					<div class="col-lg-10 col-xs-10">
+						<section class="buttons">
+							<div class="button" id="arrowL"></div>
+							<div class="button" id="arrowR"></div>
+							<div class="button" id="arrowD"></div>
+							<div class="button" id="rotate"></div>
+							<div class="button" id="pause"></div>
+						</section>
+					</div>
+					<div class="col-lg-2 col-xs-2">
+						<a id="info" class="tooltips" href="#"><span>Created by Kamil Podlasek</span></a>
+					</div>
+				</div>
+				-->
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-lg-5 col-xs-12 center-block" id="endGameScreen">
+				<h1>YOU LOSE</h1>
+				<h2>Points:</h2>
+				<h3>0</h3>
+				<footer>&#169 Copyright 2016 <a href="mailto:kamil.podlasek@gmail.com">Kamil Podlasek</a></footer>
+			</div>
+		</div>
+		
+	</div>
+</body>
+</html>
