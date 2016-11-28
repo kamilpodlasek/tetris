@@ -1,15 +1,11 @@
-/*global $*///for jQuery's $
-/*jslint plusplus: true *///for ++
-/*jslint node: true *///for global "use strict"
 "use strict";
-var startGame, addPoint, flash;//functions
-var prevColor, newFigure, newColor;//start values
-var Field, Figure, Brick, NextFigure;//constructors
-var field, figure, nextFigure;//objects
-var figureLoweringIntervalId;//interval
+var startGame, addPoint, flash,//functions
+    prevColor, newFigure, newColor,//start values
+    Field, Figure, Brick, NextFigure,//constructors
+    field, figure, nextFigure,//objects
+    figureLoweringIntervalId;//interval
 
 $(document).ready(function () {
-    
 	$('#startGameScreen').fadeIn(1000);
 	$("#start").mousedown(function () {
 		startGame();
@@ -106,8 +102,7 @@ Field = function (width, height) {
 
 Field.prototype.removeFullRows = function () {
     var bricksInRows = [],//creating array containing amount of bricks in every row
-        i,
-        toRemove;
+        i, toRemove;
     
     for (i = 0; i < this.height; i++) {
         bricksInRows[i] = 0;
@@ -165,62 +160,67 @@ Field.prototype.finishGame = function () {
 Figure = function (type, color) {
 	this.type = type;
 	this.color = color;
-	var figure = document.createElement('div');
-	this.figure = figure;
-	$(this.figure).addClass("figure").appendTo($(field.field));
 	this.state = 1;
-	if (this.type === 1 || this.type === 4 || this.type === 5) {
-        this.statesAmount = 4;
-    } else if (this.type === 2) {
-        this.statesAmount = 1;
-    } else if (this.type === 3 || this.type === 6 || this.type === 7) {
-        this.statesAmount = 2;
-    }
+	if (this.type === 1 || this.type === 4 || this.type === 5) this.statesAmount = 4;
+    else if (this.type === 2) this.statesAmount = 1;
+    else if (this.type === 3 || this.type === 6 || this.type === 7) this.statesAmount = 2;
 
-	this.bricks = [];
-	if (type === 1) {//platform
-		this.bricks[0] = new Brick(this, 4, 0);
-		this.bricks[1] = new Brick(this, 5, 0);
-		this.bricks[2] = new Brick(this, 6, 0);
-		this.bricks[3] = new Brick(this, 5, 1);
-	} else if (type === 2) {//square
-		this.bricks[0] = new Brick(this, 5, 0);
-		this.bricks[1] = new Brick(this, 6, 0);
-		this.bricks[2] = new Brick(this, 5, 1);
-		this.bricks[3] = new Brick(this, 6, 1);
-	} else if (type === 3) {//line
-		this.bricks[0] = new Brick(this, 4, 0);
-		this.bricks[1] = new Brick(this, 5, 0);
-		this.bricks[2] = new Brick(this, 6, 0);
-		this.bricks[3] = new Brick(this, 7, 0);
-	} else if (type === 4) {//L normal
-		this.bricks[0] = new Brick(this, 4, 0);
-		this.bricks[1] = new Brick(this, 5, 0);
-		this.bricks[2] = new Brick(this, 6, 0);
-		this.bricks[3] = new Brick(this, 4, 1);
-	} else if (type === 5) {//L turned
-		this.bricks[0] = new Brick(this, 4, 0);
-		this.bricks[1] = new Brick(this, 5, 0);
-		this.bricks[2] = new Brick(this, 6, 0);
-		this.bricks[3] = new Brick(this, 6, 1);
-	} else if (type === 6) {//stairs S normal
-		this.bricks[0] = new Brick(this, 6, 0);
-		this.bricks[1] = new Brick(this, 5, 1);
-		this.bricks[2] = new Brick(this, 6, 1);
-		this.bricks[3] = new Brick(this, 5, 2);
-	} else if (type === 7) {//stairs S turned
-		this.bricks[0] = new Brick(this, 4, 0);
-		this.bricks[1] = new Brick(this, 4, 1);
-		this.bricks[2] = new Brick(this, 5, 1);
-		this.bricks[3] = new Brick(this, 5, 2);
-	}
-	
+    this.insertFigure($(field.field));
+    
+    this.generateBricks(4, 0);//default shift
+    
 	$.each(this.bricks, function () {//for each brick in a figure
 		if (this.collisionOnCreate) {
 			field.finishGame();
 			return false;//end of loop
 		}
 	});
+};
+
+Figure.prototype.insertFigure = function (fieldToInsert) {
+    var figure = document.createElement('div');
+	this.figure = figure;
+    $(this.figure).addClass("figure").appendTo(fieldToInsert);
+};
+
+Figure.prototype.generateBricks = function (x, y) {
+	this.bricks = [];
+	if (this.type === 1) {//platform
+		this.bricks[0] = new Brick(this, x, y);
+		this.bricks[1] = new Brick(this, x + 1, y);
+		this.bricks[2] = new Brick(this, x + 2, y);
+		this.bricks[3] = new Brick(this, x + 1, y + 1);
+	} else if (this.type === 2) {//square
+		this.bricks[0] = new Brick(this, x + 1, y);
+		this.bricks[1] = new Brick(this, x + 2, y);
+		this.bricks[2] = new Brick(this, x + 1, y + 1);
+		this.bricks[3] = new Brick(this, x + 2, y + 1);
+	} else if (this.type === 3) {//line
+		this.bricks[0] = new Brick(this, x, y);
+		this.bricks[1] = new Brick(this, x + 1, y);
+		this.bricks[2] = new Brick(this, x + 2, y);
+		this.bricks[3] = new Brick(this, x + 3, y);
+	} else if (this.type === 4) {//L normal
+		this.bricks[0] = new Brick(this, x, y);
+		this.bricks[1] = new Brick(this, x + 1, y);
+		this.bricks[2] = new Brick(this, x + 2, y);
+		this.bricks[3] = new Brick(this, x, y + 1);
+	} else if (this.type === 5) {//L turned
+		this.bricks[0] = new Brick(this, x, y);
+		this.bricks[1] = new Brick(this, x + 1, y);
+		this.bricks[2] = new Brick(this, x + 2, y);
+		this.bricks[3] = new Brick(this, x + 2, y + 1);
+	} else if (this.type === 6) {//stairs S normal
+		this.bricks[0] = new Brick(this, x + 2, y);
+		this.bricks[1] = new Brick(this, x + 1, y + 1);
+		this.bricks[2] = new Brick(this, x + 2, y + 1);
+		this.bricks[3] = new Brick(this, x + 1, y + 2);
+	} else if (this.type === 7) {//stairs S turned
+		this.bricks[0] = new Brick(this, x, y);
+		this.bricks[1] = new Brick(this, x, y + 1);
+		this.bricks[2] = new Brick(this, x + 1, y + 1);
+		this.bricks[3] = new Brick(this, x + 1, y + 2);
+	}
 };
 
 Figure.prototype.lower = function () {
@@ -274,8 +274,7 @@ Figure.prototype.move = function (x, y) {
 
 Figure.prototype.rotate = function () {
 	var shifts = [],//making array for shifts of every brick in a figure
-        i,
-        collisionOccurs = false;
+        i, collisionOccurs = false;
     
 	for (i in this.bricks) {//creating 2nd dimension of an array
 		shifts[i] = [];
@@ -285,109 +284,51 @@ Figure.prototype.rotate = function () {
 	
 	if (this.type === 1) {//setting shifts of bricks in a figure
 		if (this.state === 1) {
-			shifts[0].x = 2;
-			shifts[0].y = 2;
-			shifts[1].x = 1;
-			shifts[1].y = 1;
+			shifts[0].x = 2; shifts[0].y = 2; shifts[1].x = 1; shifts[1].y = 1;
 		} else if (this.state === 2) {
-			shifts[1].x = -1;
-			shifts[1].y = 1;
-			shifts[2].x = -2;
-			shifts[2].y = 2;
+			shifts[1].x = -1; shifts[1].y = 1; shifts[2].x = -2; shifts[2].y = 2;
 		} else if (this.state === 3) {
-			shifts[0].x = -2;
-			shifts[0].y = -2;
-			shifts[1].x = -1;
-			shifts[1].y = -1;
+			shifts[0].x = -2; shifts[0].y = -2; shifts[1].x = -1; shifts[1].y = -1;
 		} else if (this.state === 4) {
-			shifts[1].x = 1;
-			shifts[1].y = -1;
-			shifts[2].x = 2;
-			shifts[2].y = -2;
+			shifts[1].x = 1; shifts[1].y = -1; shifts[2].x = 2; shifts[2].y = -2;
 		}
 	} else if (this.type === 3) {
 		if (this.state === 1) {
-			shifts[0].x = 2;
-			shifts[0].y = -2;
-			shifts[1].x = 1;
-			shifts[1].y = -1;
-			shifts[3].x = -1;
-			shifts[3].y = 1;
+			shifts[0].x = 2; shifts[0].y = -2; shifts[1].x = 1; shifts[1].y = -1; shifts[3].x = -1; shifts[3].y = 1;
 		} else if (this.state === 2) {
-			shifts[0].x = -2;
-			shifts[0].y = 2;
-			shifts[1].x = -1;
-			shifts[1].y = 1;
-			shifts[3].x = 1;
-			shifts[3].y = -1;
+			shifts[0].x = -2; shifts[0].y = 2; shifts[1].x = -1; shifts[1].y = 1; shifts[3].x = 1; shifts[3].y = -1;
 		}
 	} else if (this.type === 4) {
 		if (this.state === 1) {
-			shifts[0].x = 2;
-			shifts[0].y = 1;
-			shifts[3].x = 2;
-			shifts[3].y = 1;
+			shifts[0].x = 2; shifts[0].y = 1; shifts[3].x = 2; shifts[3].y = 1;
 		} else if (this.state === 2) {
-			shifts[1].x = -1;
-			shifts[1].y = 2;
-			shifts[2].x = -1;
-			shifts[2].y = 2;
+			shifts[1].x = -1; shifts[1].y = 2; shifts[2].x = -1; shifts[2].y = 2;
 		} else if (this.state === 3) {
-			shifts[0].x = -2;
-			shifts[0].y = -1;
-			shifts[3].x = -2;
-			shifts[3].y = -1;
+			shifts[0].x = -2; shifts[0].y = -1; shifts[3].x = -2; shifts[3].y = -1;
 		} else if (this.state === 4) {
-			shifts[1].x = 1;
-			shifts[1].y = -2;
-			shifts[2].x = 1;
-			shifts[2].y = -2;
+			shifts[1].x = 1; shifts[1].y = -2; shifts[2].x = 1; shifts[2].y = -2;
 		}
 	} else if (this.type === 5) {
 		if (this.state === 1) {
-			shifts[0].x = 1;
-			shifts[0].y = 2;
-			shifts[1].x = 1;
-			shifts[1].y = 2;
+			shifts[0].x = 1; shifts[0].y = 2; shifts[1].x = 1; shifts[1].y = 2;
 		} else if (this.state === 2) {
-			shifts[2].x = -2;
-			shifts[2].y = 1;
-			shifts[3].x = -2;
-			shifts[3].y = 1;
+			shifts[2].x = -2; shifts[2].y = 1; shifts[3].x = -2; shifts[3].y = 1;
 		} else if (this.state === 3) {
-			shifts[0].x = -1;
-			shifts[0].y = -2;
-			shifts[1].x = -1;
-			shifts[1].y = -2;
+			shifts[0].x = -1; shifts[0].y = -2; shifts[1].x = -1; shifts[1].y = -2;
 		} else if (this.state === 4) {
-			shifts[2].x = 2;
-			shifts[2].y = -1;
-			shifts[3].x = 2;
-			shifts[3].y = -1;
+			shifts[2].x = 2; shifts[2].y = -1; shifts[3].x = 2; shifts[3].y = -1;
 		}
 	} else if (this.type === 6) {
 		if (this.state === 1) {
-			shifts[0].x = -2;
-			shifts[0].y = 1;
-			shifts[2].x = 0;
-			shifts[2].y = 1;
+			shifts[0].x = -2; shifts[0].y = 1; shifts[2].x = 0; shifts[2].y = 1;
 		} else if (this.state === 2) {
-			shifts[0].x = 2;
-			shifts[0].y = -1;
-			shifts[2].x = 0;
-			shifts[2].y = -1;
+			shifts[0].x = 2; shifts[0].y = -1; shifts[2].x = 0; shifts[2].y = -1;
 		}
 	} else if (this.type === 7) {
 		if (this.state === 1) {
-			shifts[0].x = 2;
-			shifts[0].y = 1;
-			shifts[1].x = 0;
-			shifts[1].y = 1;
+			shifts[0].x = 2; shifts[0].y = 1; shifts[1].x = 0; shifts[1].y = 1;
 		} else if (this.state === 2) {
-			shifts[0].x = -2;
-			shifts[0].y = -1;
-			shifts[1].x = 0;
-			shifts[1].y = -1;
+			shifts[0].x = -2; shifts[0].y = -1; shifts[1].x = 0; shifts[1].y = -1;
 		}
 	}
 
@@ -408,6 +349,33 @@ Figure.prototype.rotate = function () {
 	}
 };
 
+
+NextFigure = function (type, color) {
+    var x = 0, y = 0;
+    
+    this.type = type;
+	this.color = color;
+    
+    this.insertFigure($(".nextFigure"));
+    
+    if (type === 1 || type === 2 || type === 4) { y = 1; }
+    else if (type === 3) { y = 2; }
+    else if (type === 5) { x = 1; y = 1; }
+    else if (type === 7) { x = 1; }
+    
+    this.generateBricks(x, y);
+};
+
+NextFigure.prototype = Object.create(Figure.prototype);
+NextFigure.prototype.constructor = NextFigure;
+
+NextFigure.prototype.removeFigure = function () {
+	$.each(this.bricks, function () {//for each brick in a figure
+		this.brick.remove();//removing "brick" div
+	});
+};
+
+
 Brick = function (figure, x, y) {
     var i;
     
@@ -421,7 +389,7 @@ Brick = function (figure, x, y) {
 	this.x = x;
 	this.y = y;
 	this.brick = document.createElement('div');
-	$(this.brick).css('left', 30 * x).css('top', 30 * y).css("background-image", "url(images/" + this.figure.color + ".png)").addClass("brick").appendTo($(this.figure.figure));
+	$(this.brick).css('left', 30 * x).css('top', 30 * y).css("background-image", "url(img/" + this.figure.color + ".png)").addClass("brick").appendTo($(this.figure.figure));
 };
 
 Brick.prototype.checkCollisions = function (x, y) {
@@ -446,56 +414,4 @@ Brick.prototype.move = function (x, y) {
 	this.x += x;
 	this.y += y;
 	$(this.brick).css('left', 30 * this.x).css('top', 30 * this.y);
-};
-
-NextFigure = function (type, color) {
-	this.type = type;
-	this.color = color;
-	var figure = document.createElement('div');
-	this.figure = figure;
-	$(this.figure).addClass("figure").appendTo($(".nextFigure"));
-
-	this.bricks = [];
-	if (type === 1) {//platform
-		this.bricks[0] = new Brick(this, 0, 1);
-		this.bricks[1] = new Brick(this, 1, 1);
-		this.bricks[2] = new Brick(this, 2, 1);
-		this.bricks[3] = new Brick(this, 1, 2);
-	} else if (type === 2) {//square
-		this.bricks[0] = new Brick(this, 1, 1);
-		this.bricks[1] = new Brick(this, 2, 1);
-		this.bricks[2] = new Brick(this, 1, 2);
-		this.bricks[3] = new Brick(this, 2, 2);
-	} else if (type === 3) {//line
-		this.bricks[0] = new Brick(this, 0, 2);
-		this.bricks[1] = new Brick(this, 1, 2);
-		this.bricks[2] = new Brick(this, 2, 2);
-		this.bricks[3] = new Brick(this, 3, 2);
-	} else if (type === 4) {//L normal
-		this.bricks[0] = new Brick(this, 0, 1);
-		this.bricks[1] = new Brick(this, 1, 1);
-		this.bricks[2] = new Brick(this, 2, 1);
-		this.bricks[3] = new Brick(this, 0, 2);
-	} else if (type === 5) {//L turned
-		this.bricks[0] = new Brick(this, 0, 1);
-		this.bricks[1] = new Brick(this, 1, 1);
-		this.bricks[2] = new Brick(this, 2, 1);
-		this.bricks[3] = new Brick(this, 2, 2);
-	} else if (type === 6) {//stairs S normal
-		this.bricks[0] = new Brick(this, 2, 0);
-		this.bricks[1] = new Brick(this, 1, 1);
-		this.bricks[2] = new Brick(this, 2, 1);
-		this.bricks[3] = new Brick(this, 1, 2);
-	} else if (type === 7) {//stairs S turned
-		this.bricks[0] = new Brick(this, 1, 0);
-		this.bricks[1] = new Brick(this, 1, 1);
-		this.bricks[2] = new Brick(this, 2, 1);
-		this.bricks[3] = new Brick(this, 2, 2);
-	}
-};
-
-NextFigure.prototype.removeFigure = function () {
-	$.each(this.bricks, function () {//for each brick in a figure
-		this.brick.remove();//removing "brick" div
-	});
 };

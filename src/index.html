@@ -5,21 +5,21 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Tetris</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<script src="script.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.min.css">
+	<script src="js/main.min.js"></script>
 </head>
 <body>
-	<div id="startGameScreen" class="overlay">
+	<div id="startGameScreen" class="overlay centerDiv">
 		<h1>TETRIS</h1>
-		<h2><img src="images/keyArrowL.png" alt="arrow left" height="50" width="50"> - move left</h2>
-		<h2><img src="images/keyArrowR.png" alt="arrow right" height="50" width="50"> - move right</h2>
-		<h2><img src="images/keyArrowD.png" alt="arrow down" height="50" width="50"> - move down</h2>
-		<h2><img src="images/keySpace.png" alt="key space" height="50" width="137"> - rotate</h2>
-		<h2><img src="images/keyP.png" alt="key p" height="50" width="50"> - pause</h2>
+		<h2><img src="img/keyArrowL.png" alt="arrow left" height="50" width="50"> - move left</h2>
+		<h2><img src="img/keyArrowR.png" alt="arrow right" height="50" width="50"> - move right</h2>
+		<h2><img src="img/keyArrowD.png" alt="arrow down" height="50" width="50"> - move down</h2>
+		<h2><img src="img/keySpace.png" alt="key space" height="50" width="137"> - rotate</h2>
+		<h2><img src="img/keyP.png" alt="key p" height="50" width="50"> - pause</h2>
 		<div id="start"></div>
 	</div>
 
-	<main>
+	<main class="centerDiv">
 		<section class="field"></section>
 		<aside>
 			<h2>Points:</h2>
@@ -37,7 +37,7 @@
 		<a id="info" class="tooltips" href="#"><span>Created by Kamil Podlasek</span></a>
 	</main>
 	
-	<div id="endGameScreen" class="overlay">
+	<div id="endGameScreen" class="overlay centerDiv">
 		<h1>YOU LOSE</h1>
 		<h2>Points:</h2>
 		<h3>0</h3>
